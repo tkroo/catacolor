@@ -76,13 +76,18 @@
 <svelte:head>
   <title>CataColor</title>
 </svelte:head>
-<h1>🖍️ CataColor </h1>
+
+<header>
+  <h1>🖍️ CataColor</h1>
+  <span class="gh"><a href="https://github.com/tkroo/catacolor" title="GitHub Repo">source <img class="svg" src="/github-142-svgrepo-com.svg" alt="github icon" /></a> 
+    </span>
+  </header>
 <!-- <hr /> -->
 
 <div class="cols">
   <div class="blocks">
     <h2>Adjust</h2>
-    <label for="startfile">(optional) load .json color file <input type="file" name="startfile" on:change={readFile} /></label>
+    <label for="startfile">(optional) load a .json color file as a starting point<br><input type="file" name="startfile" on:change={readFile} /></label>
     <p style="font-size: 0.75rem">click the colors for a color picker</p>
     {#each $colors.slice(1) as color}
       <RGBPicker bind:color />
@@ -90,7 +95,7 @@
   </div>
   <div class="outputobj">
     <h2>Output</h2>
-    <button on:click={writeToFile}>download as base_colors.json</button> or copy the object below into <code>base_colors.json</code>
+    <button on:click={writeToFile}>download as base_colors.json</button><br>or copy the object below into <code>&lt;CDDA_PATH&gt;/config/base_colors.json</code>
     <br>
 <textarea readonly rows="22" cols="50" on:focus={(e) => e.target.select()}>{prefix}
 {output}{suffix}</textarea>
@@ -106,18 +111,11 @@
     padding: 2rem;
     color: #eee;
     background-color: black;
-    font-family:
-      -apple-system,
-      BlinkMacSystemFont,
-      Segoe UI,
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      Fira Sans,
-      Droid Sans,
-      Helvetica Neue,
-      sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  code {
+    font-family: monospace;
+    color: #a4d9e9;
   }
   textarea {
     margin-top: 1rem;
@@ -128,6 +126,12 @@
     color: #eee;
     background-color: rgb(36,31,40);
   }
+  header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: baseline;
+  }
   h1 {
     margin: 0;
     color: #eee;
@@ -136,6 +140,7 @@
   .cols {
     display: flex;
     justify-content: flex-start;
+    flex-wrap: wrap;
     gap: 5rem;
   }
 
@@ -154,5 +159,17 @@
 
   .outputobj button {
     font-size: inherit;
+  }
+  .gh a {
+    font-size: 0.75rem;
+    color: #eee;
+    text-decoration: none;
+  }
+  .gh a:hover {
+    text-decoration: underline;
+  }
+  .gh .svg {
+    width: 1rem;
+    height: 1rem;
   }
 </style>

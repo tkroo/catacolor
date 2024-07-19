@@ -12,7 +12,7 @@
 </script>
 
 <section>
-	<h2>{color.name}</h2>
+	<h2>"{color.name}": [{color.r}, {color.g}, {color.b}]</h2>
 	<div class="horiz">
 		<ColorPicker bind:color on:updateColor={updateColor}/>
 		<label for="r">
@@ -32,9 +32,10 @@
 
 <style>
 	h2 {
-		font-size: 1rem;
+		font-size: 0.8rem;
 		color: #eee;
 		margin: 0;
+		font-family: monospace;
 	}
 	input[type='range'] {
 		width: 100%;
@@ -45,7 +46,7 @@
 		width: 300px;
 	}
 	section {
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
 	}
 </style>
 
