@@ -76,7 +76,7 @@
 <svelte:head>
   <title>CataColor</title>
 </svelte:head>
-<h1>CataColor</h1>
+<h1>🖍️ CataColor </h1>
 <!-- <hr /> -->
 
 <div class="cols">
