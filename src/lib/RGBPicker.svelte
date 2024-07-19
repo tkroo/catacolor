@@ -3,7 +3,6 @@
 	export let color;
 
 	const updateColor = (e) => {
-		console.log('updateColor : : : ', e.detail);
 		color.r = e.detail.mycolor.red;
 		color.g = e.detail.mycolor.green;
 		color.b = e.detail.mycolor.blue;
@@ -15,9 +14,7 @@
 <section>
 	<h2>{color.name}</h2>
 	<div class="horiz">
-		<!-- <p>rgb({color.r}, {color.g}, {color.b})</p> -->
 		<ColorPicker bind:color on:updateColor={updateColor}/>
-		<!-- <div class="block" style="background-color: rgb({color.r}, {color.g}, {color.b})"></div> -->
 		<label for="r">
 			<input type="range" name="r" min="0" max="255" bind:value={color.r} />
 			{color.r}
@@ -46,12 +43,6 @@
 		display: flex;
 		justify-content: space-between;
 		width: 300px;
-	}
-	.block {
-		width: 400px;
-		height: 30px;
-		border: 0;
-		padding: 0;
 	}
 	section {
 		margin-bottom: 1rem;

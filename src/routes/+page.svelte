@@ -1,29 +1,34 @@
 <script>
+  import Combos from '$lib/Combos.svelte';
   import RGBPicker from '$lib/RGBPicker.svelte';
   import { writable } from 'svelte/store';
-  let colors = writable([
-    { type:"colordef" },
-    { name: 'BLACK', r: 15, g: 15, b: 15 },
-    { name: 'RED', r: 165, g: 29, b: 45 },
-    { name: 'GREEN', r: 23, g: 123, b: 23 },
-    { name: 'BROWN', r: 131, g: 88, b: 11 },
-    { name: 'BLUE', r: 44, g: 17, b: 162 },
-    { name: 'MAGENTA', r: 179, g: 45, b: 145 },
-    { name: 'CYAN', r: 0, g: 164, b: 164 },
-    { name: 'GRAY', r: 185, g: 185, b: 185 },
-    { name: 'DGRAY', r: 127, g: 127, b: 127 },
-    { name: 'LRED', r: 255, g: 82, b: 82 },
-    { name: 'LGREEN', r: 15, g: 198, b: 61 },
-    { name: 'YELLOW', r: 255, g: 201, b: 60 },
-    { name: 'LBLUE', r: 43, g: 131, b: 202 },
-    { name: 'LMAGENTA', r: 229, g: 126, b: 213 },
-    { name: 'LCYAN', r: 84, g: 244, b: 254 },
-    { name: 'WHITE', r: 255, g: 255, b: 255 }
-  ]);
+  let colors = writable(
+    [
+      { "type": "colordef" },
+      { name: "BLACK", r: 36, g: 31, b: 40 },
+      { name: "RED", r: 192, g: 28, b: 40 },
+      { name: "GREEN", r: 24, g: 139, b: 24 },
+      { name: "BROWN", r: 131, g: 88, b: 11 },
+      { name: "BLUE", r: 26, g: 95, b: 180 },
+      { name: "MAGENTA", r: 179, g: 45, b: 145 },
+      { name: "CYAN", r: 0, g: 164, b: 164 },
+      { name: "GRAY", r: 185, g: 185, b: 185 },
+      { name: "DGRAY", r: 127, g: 127, b: 127 },
+      { name: "LRED", r: 255, g: 82, b: 82 },
+      { name: "LGREEN", r: 15, g: 198, b: 61 },
+      { name: "YELLOW", r: 255, g: 201, b: 60 },
+      { name: "LBLUE", r: 98, g: 160, b: 234 },
+      { name: "LMAGENTA", r: 229, g: 126, b: 213 },
+      { name: "LCYAN", r: 84, g: 244, b: 254 },
+      { name: "WHITE", r: 255, g: 255, b: 255 }
+    ]
+  )
 
-  const prefix = '[<br>  {';
-  const suffix = '  }<br>]';
+  // const prefix = '[<br>  {';
+  // const suffix = '  }<br>]';
 
+  const prefix = '[\n  {\n    "type": "colordef",';
+  const suffix = '\n  }\n]';
   const prefix_file = '[\n  {\n    "type": "colordef",\n';
   const suffix_file = '\n  }\n]';
 
@@ -48,9 +53,6 @@
       reader.onload = (event) => {
         const data = JSON.parse(event.target.result);
         const obj = data[0];
-        console.log('=========');
-        console.log(obj);
-        console.log('=========');
         $colors = Object.keys(obj).map(color => {
           if (color !== 'colordef') {
             return {
@@ -71,25 +73,30 @@
     }
 
 </script>
-
+<svelte:head>
+  <title>CataColor</title>
+</svelte:head>
 <h1>CataColor</h1>
-<hr />
+<!-- <hr /> -->
 
 <div class="cols">
   <div class="blocks">
+    <h2>Adjust</h2>
+    <label for="startfile">(optional) load .json color file <input type="file" name="startfile" on:change={readFile} /></label>
+    <p style="font-size: 0.75rem">click the colors for a color picker</p>
     {#each $colors.slice(1) as color}
       <RGBPicker bind:color />
     {/each}
   </div>
   <div class="outputobj">
-    <input type="file" accept="application/json" on:change={readFile} /><br>
+    <h2>Output</h2>
     <button on:click={writeToFile}>download as base_colors.json</button> or copy the object below into <code>base_colors.json</code>
-    <pre>
-{@html prefix}
-    "type": "colordef",
-{@html output}
-{@html suffix}
-    </pre>
+    <br>
+<textarea readonly rows="22" cols="50" on:focus={(e) => e.target.select()}>{prefix}
+{output}{suffix}</textarea>
+  </div>
+  <div class="combos">
+    <Combos bind:colors={$colors} />
   </div>
 </div>
 
@@ -112,7 +119,15 @@
       Helvetica Neue,
       sans-serif;
   }
-
+  textarea {
+    margin-top: 1rem;
+    /* height: 22rem; */
+    width: 100%;
+    padding: 1rem 1rem 0 1rem;
+    border: 1px solid #888;
+    color: #eee;
+    background-color: rgb(36,31,40);
+  }
   h1 {
     margin: 0;
     color: #eee;
@@ -124,9 +139,19 @@
     gap: 5rem;
   }
 
-  .outputobj {
+  .outputobj, .blocks label, .blocks input {
     font-size: 0.75rem;
   }
+
+  .blocks label {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .outputobj h2 {
+    font-size: 1.5rem;
+  }
+
   .outputobj button {
     font-size: inherit;
   }
