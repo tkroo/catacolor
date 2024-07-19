@@ -7,7 +7,6 @@
   import hexRgb from "hex-rgb";
   $: hex = "#" + rgbHex(color.r, color.g, color.b);
 
-
   const updateColor = (e) => {
     dispatch('updateColor', {'mycolor': hexRgb(e.target.value)});
   }
