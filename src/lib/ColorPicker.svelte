@@ -12,11 +12,11 @@
   }
 </script>
 
-<input type="color" value={hex} on:input={updateColor} />
+<label for="color_{color.name}" title="click to edit color"><input type="color" id="color_{color.name}" value={hex} on:input={updateColor} /></label>
   
 <style>
   input[type="color"] {
-    width: 300px;
+    width: 200px;
     height: 50px;
     border: 0;
     padding: 0;

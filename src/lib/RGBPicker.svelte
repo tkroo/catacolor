@@ -43,10 +43,10 @@
 	label {
 		display: flex;
 		justify-content: space-between;
-		width: 300px;
+		width: 200px;
 	}
 	section {
-		margin-bottom: 2rem;
+		margin-bottom: 1rem;
 	}
 </style>
 

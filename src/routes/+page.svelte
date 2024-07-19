@@ -1,7 +1,9 @@
 <script>
+  import { writable } from 'svelte/store';
   import Combos from '$lib/Combos.svelte';
   import RGBPicker from '$lib/RGBPicker.svelte';
-  import { writable } from 'svelte/store';
+  import { extractFromDFcolors } from '$lib/utils';
+
   let colors = writable(
     [
       { "type": "colordef" },
@@ -14,7 +16,7 @@
       { name: "CYAN", r: 0, g: 164, b: 164 },
       { name: "GRAY", r: 185, g: 185, b: 185 },
       { name: "DGRAY", r: 127, g: 127, b: 127 },
-      { name: "LRED", r: 255, g: 82, b: 82 },
+      { name: "LRED", r: 251, g: 115, b: 115 },
       { name: "LGREEN", r: 15, g: 198, b: 61 },
       { name: "YELLOW", r: 255, g: 201, b: 60 },
       { name: "LBLUE", r: 98, g: 160, b: 234 },
@@ -47,13 +49,8 @@
       a.click();
     }
 
-    const readFile = (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const data = JSON.parse(event.target.result);
-        const obj = data[0];
-        $colors = Object.keys(obj).map(color => {
+    const mapColorObject = (obj) => {
+      return Object.keys(obj).map(color => {
           if (color !== 'colordef') {
             return {
               name: color,
@@ -66,28 +63,60 @@
               name: obj[color],
           }
         }
-      });
+      })
+    }
+
+    const readFile = (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = JSON.parse(event.target.result);
+        const obj = data[0];
+        console.log('objcdda : ', obj);
+        $colors = mapColorObject(obj);
+        // $colors = Object.keys(obj).map(color => {
+        //   if (color !== 'colordef') {
+        //     return {
+        //       name: color,
+        //       r: obj[color][0],
+        //       g: obj[color][1],
+        //       b: obj[color][2]
+        //     }
+        //   } else {
+        //     return {
+        //       name: obj[color],
+        //   }
+        // }
+      // });
         // $colors = foo;
       };
       reader.readAsText(file);
     }
 
-</script>
-<svelte:head>
-  <title>CataColor</title>
-</svelte:head>
+    const readDFcolors = (event) => {
+		const file = event.target.files[0];
+    // df_file_name = `base_colors-${file.name.replace('.txt', '')}.json`;
+		const reader = new FileReader();
+		reader.onload = async (event) => {
+      const data = event.target.result;
+      const obj = await extractFromDFcolors(data);
+      console.log('obj : ', obj);
+      $colors = mapColorObject(obj[0]);
+      console.log('output : ', $colors);
+		};
 
-<header>
-  <h1>🖍️ CataColor</h1>
-  <span class="gh"><a href="https://github.com/tkroo/catacolor" title="GitHub Repo">source <img class="svg" src="/github-142-svgrepo-com.svg" alt="github icon" /></a> 
-    </span>
-  </header>
+		reader.readAsText(file);
+	};
+
+</script>
+
 <!-- <hr /> -->
 
 <div class="cols">
   <div class="blocks">
     <h2 class="f-light">Adjust</h2>
-    <label for="startfile">(optional) load a .json color file as a starting point<br><input type="file" name="startfile" on:change={readFile} /></label>
+    <label for="startfile">(optional) load a CDDA color file<br><input type="file" name="startfile" on:change={readFile} /></label>
+    <label for="df_file">(optional) load a Dwarf Fortress color file<br><input type="file" name="startfile" on:change={readDFcolors} /></label>
     <p style="font-size: 0.75rem">click the colors for a color picker</p>
     {#each $colors.slice(1) as color}
       <RGBPicker bind:color />
@@ -95,9 +124,9 @@
   </div>
   <div class="outputobj">
     <h2 class="f-light">Output</h2>
-    <button on:click={writeToFile}>download as base_colors.json</button><br>or copy the object below into <code>&lt;CDDA_PATH&gt;/config/base_colors.json</code>
+    <button on:click={writeToFile}>download as base_colors.json</button><br>or copy the object below into<br><code>&lt;CDDA_PATH&gt;/config/base_colors.json</code>
     <br>
-<textarea readonly rows="22" cols="50" on:focus={(e) => e.target.select()}>{prefix}
+<textarea readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
 {output}{suffix}</textarea>
   </div>
   <div class="combos">
@@ -107,13 +136,6 @@
 </div>
 
 <style>
-  :global(body) {
-    margin: 0;
-    padding: 2rem;
-    color: #eee;
-    background-color: black;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
   code {
     font-family: monospace;
     color: #a4d9e9;
@@ -121,29 +143,18 @@
   textarea {
     margin-top: 1rem;
     /* height: 22rem; */
-    width: 100%;
+    width: fit-content;
     padding: 1rem 1rem 0 1rem;
     border: 1px solid #888;
     color: #eee;
     background-color: rgb(36,31,40);
-  }
-  header {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-  h1 {
-    margin: 0;
-    color: #eee;
-    font-weight: 400;
   }
 
   .cols {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    gap: 5rem;
+    gap: 3rem;
   }
 
   .outputobj, .blocks label, .blocks input {
@@ -161,18 +172,6 @@
 
   .outputobj button {
     font-size: inherit;
-  }
-  .gh a {
-    font-size: 0.75rem;
-    color: #eee;
-    text-decoration: none;
-  }
-  .gh a:hover {
-    text-decoration: underline;
-  }
-  .gh .svg {
-    width: 1rem;
-    height: 1rem;
   }
   .f-light {
     font-weight: 400;

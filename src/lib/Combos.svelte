@@ -21,7 +21,8 @@
 <div class="combo-container">
   {#each colorCombos as combo}
     <div class="combo" style="background-color: rgb({combo[1].r}, {combo[1].g}, {combo[1].b}); color: rgb({combo[0].r}, {combo[0].g}, {combo[0].b})">
-      {combo[0].name} - 1234567890 - Lorem ipsum dolor sit amet consectetur.<br><strong>BOLD: Lorem ipsum dolor sit amet consectetur.</strong>
+      <span class="fixed-width">{combo[0].name} on {combo[1].name}</span> You must prepare to face the many hardships to come<br>
+      <strong><span class="fixed-width">BOLD:</span> You must prepare to face the many hardships to come</strong>
     </div>
   {/each}
 </div>
@@ -31,7 +32,6 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding: 0 2rem 0 0;
   }
 	.combo {
     height: fit-content;
@@ -39,4 +39,9 @@
 		padding: 1px;
     font-family: monospace;
 	}
+
+  .fixed-width {
+    width: 128px;
+    display: inline-block;
+  }
 </style>
