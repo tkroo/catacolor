@@ -86,7 +86,7 @@
 
 <div class="cols">
   <div class="blocks">
-    <h2>Adjust</h2>
+    <h2 class="f-light">Adjust</h2>
     <label for="startfile">(optional) load a .json color file as a starting point<br><input type="file" name="startfile" on:change={readFile} /></label>
     <p style="font-size: 0.75rem">click the colors for a color picker</p>
     {#each $colors.slice(1) as color}
@@ -94,13 +94,14 @@
     {/each}
   </div>
   <div class="outputobj">
-    <h2>Output</h2>
+    <h2 class="f-light">Output</h2>
     <button on:click={writeToFile}>download as base_colors.json</button><br>or copy the object below into <code>&lt;CDDA_PATH&gt;/config/base_colors.json</code>
     <br>
 <textarea readonly rows="22" cols="50" on:focus={(e) => e.target.select()}>{prefix}
 {output}{suffix}</textarea>
   </div>
   <div class="combos">
+    <h2 class="f-light">Preview</h2>
     <Combos bind:colors={$colors} />
   </div>
 </div>
@@ -135,6 +136,7 @@
   h1 {
     margin: 0;
     color: #eee;
+    font-weight: 400;
   }
 
   .cols {
@@ -171,5 +173,8 @@
   .gh .svg {
     width: 1rem;
     height: 1rem;
+  }
+  .f-light {
+    font-weight: 400;
   }
 </style>

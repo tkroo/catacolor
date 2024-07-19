@@ -17,7 +17,6 @@
   $:colorCombos = createCombos(colors);
 </script>
 
-<h2>Preview</h2>
 <p style="font-size: 0.75rem">A preview of all possible foreground/background color combinations.</p>
 <div class="combo-container">
   {#each colorCombos as combo}
