@@ -4,7 +4,7 @@
 
 <header>
   <span>
-    <h1>CataColor <img class="svg" src="/crayon-svgrepo-com.svg" alt="crayon icon" /></h1>
+    <h1>catacolor <img class="svg" src="/crayon-svgrepo-com.svg" alt="crayon icon" /></h1>
     <p>Color theme editor for Cataclysm: Dark Days Ahead</p>
   </span>
   <span class="gh">
