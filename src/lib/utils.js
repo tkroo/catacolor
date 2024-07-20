@@ -16,3 +16,36 @@ export const extractFromDFcolors = async (input) => {
   }    
   return [colorObject];
 }
+
+
+export function accordion(node, isOpen) {
+  let initialHeight = 70;
+  node.style.height = isOpen ? 'auto' : 0;
+  node.style.opacity = isOpen ? 1 : 0;
+  node.style.overflow = "hidden";
+  return {
+    update(isOpen) {
+      let animation = node.animate(
+        [
+          {
+            opacity: 1,
+            height: initialHeight + 'px',
+            overflow: 'hidden'
+          },
+          {
+            opacity: 0,
+            height: 0,
+            overflow: 'hidden'
+          }
+        ],
+        { duration: 200, fill: 'both' }
+      );
+      animation.pause();
+      if (!isOpen) {
+        animation.play();
+      } else {
+        animation.reverse();
+      }
+    }
+  };
+}

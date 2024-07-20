@@ -1,179 +1,242 @@
 <script>
-  import { writable } from 'svelte/store';
-  import Combos from '$lib/Combos.svelte';
-  import RGBPicker from '$lib/RGBPicker.svelte';
-  import { extractFromDFcolors } from '$lib/utils';
+	import Combos from '$lib/Combos.svelte';
+	import RGBPicker from '$lib/RGBPicker.svelte';
+	import { extractFromDFcolors } from '$lib/utils';
 
-  let colors = writable(
-    [
-      { "type": "colordef" },
-      { name: "BLACK", r: 36, g: 31, b: 40 },
-      { name: "RED", r: 192, g: 28, b: 40 },
-      { name: "GREEN", r: 24, g: 139, b: 24 },
-      { name: "BROWN", r: 131, g: 88, b: 11 },
-      { name: "BLUE", r: 26, g: 95, b: 180 },
-      { name: "MAGENTA", r: 179, g: 45, b: 145 },
-      { name: "CYAN", r: 0, g: 164, b: 164 },
-      { name: "GRAY", r: 185, g: 185, b: 185 },
-      { name: "DGRAY", r: 127, g: 127, b: 127 },
-      { name: "LRED", r: 251, g: 115, b: 115 },
-      { name: "LGREEN", r: 15, g: 198, b: 61 },
-      { name: "YELLOW", r: 255, g: 201, b: 60 },
-      { name: "LBLUE", r: 98, g: 160, b: 234 },
-      { name: "LMAGENTA", r: 229, g: 126, b: 213 },
-      { name: "LCYAN", r: 84, g: 244, b: 254 },
-      { name: "WHITE", r: 255, g: 255, b: 255 }
-    ]
-  )
+	let showRGBcontrols = false;
 
-  // const prefix = '[<br>  {';
-  // const suffix = '  }<br>]';
+	let colors = [
+		{ type: 'colordef' },
+		{ name: 'BLACK', r: 36, g: 31, b: 40 },
+		{ name: 'RED', r: 192, g: 28, b: 40 },
+		{ name: 'GREEN', r: 24, g: 139, b: 24 },
+		{ name: 'BROWN', r: 99, g: 69, b: 44 },
+		{ name: 'BLUE', r: 26, g: 95, b: 180 },
+		{ name: 'MAGENTA', r: 179, g: 45, b: 145 },
+		{ name: 'CYAN', r: 0, g: 164, b: 164 },
+		{ name: 'GRAY', r: 185, g: 185, b: 185 },
+		{ name: 'DGRAY', r: 127, g: 127, b: 127 },
+		{ name: 'LRED', r: 251, g: 115, b: 115 },
+		{ name: 'LGREEN', r: 15, g: 198, b: 61 },
+		{ name: 'YELLOW', r: 255, g: 201, b: 60 },
+		{ name: 'LBLUE', r: 98, g: 160, b: 234 },
+		{ name: 'LMAGENTA', r: 229, g: 126, b: 213 },
+		{ name: 'LCYAN', r: 84, g: 244, b: 254 },
+		{ name: 'WHITE', r: 255, g: 255, b: 255 }
+	];
 
-  const prefix = '[\n  {\n    "type": "colordef",';
-  const suffix = '\n  }\n]';
-  const prefix_file = '[\n  {\n    "type": "colordef",\n';
-  const suffix_file = '\n  }\n]';
+	const ordered = [
+		'BLACK',
+		'RED',
+		'GREEN',
+		'BROWN',
+		'BLUE',
+		'MAGENTA',
+		'CYAN',
+		'GRAY',
+		'DGRAY',
+		'LRED',
+		'LGREEN',
+		'YELLOW',
+		'LBLUE',
+		'LMAGENTA',
+		'LCYAN',
+		'WHITE'
+	];
 
-  $: output = [...$colors.slice(1)]
-    .map((color) => {
-      return `    "${color.name}": [ ${color.r}, ${color.g}, ${color.b} ]`;
-    })
-    .join(',\n');
+	$: sorted = colors.slice(1).sort((a, b) => {
+		return ordered.indexOf(a.name) - ordered.indexOf(b.name);
+	});
 
-    const writeToFile = () => {
-      const blob = new Blob([prefix_file, output.slice(1), suffix_file], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'base_colors.json';
-      a.click();
-    }
+	// const prefix = '[<br>  {';
+	// const suffix = '  }<br>]';
 
-    const mapColorObject = (obj) => {
-      return Object.keys(obj).map(color => {
-          if (color !== 'colordef') {
-            return {
-              name: color,
-              r: obj[color][0],
-              g: obj[color][1],
-              b: obj[color][2]
-            }
-          } else {
-            return {
-              name: obj[color],
-          }
-        }
-      })
-    }
+	const prefix = '[\n  {\n    "type": "colordef",';
+	const suffix = '\n  }\n]';
+	const prefix_file = '[\n  {\n    "type": "colordef",\n';
+	const suffix_file = '\n  }\n]';
 
-    const readFile = (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const data = JSON.parse(event.target.result);
-        const obj = data[0];
-        console.log('objcdda : ', obj);
-        $colors = mapColorObject(obj);
-        // $colors = Object.keys(obj).map(color => {
-        //   if (color !== 'colordef') {
-        //     return {
-        //       name: color,
-        //       r: obj[color][0],
-        //       g: obj[color][1],
-        //       b: obj[color][2]
-        //     }
-        //   } else {
-        //     return {
-        //       name: obj[color],
-        //   }
-        // }
-      // });
-        // $colors = foo;
-      };
-      reader.readAsText(file);
-    }
+	$: output = [...colors.slice(1)]
+		.map((color) => {
+			return `    "${color.name}": [ ${color.r}, ${color.g}, ${color.b} ]`;
+		})
+		.join(',\n');
 
-    const readDFcolors = (event) => {
+	const writeToFile = () => {
+		const blob = new Blob([prefix_file, output.slice(1), suffix_file], { type: 'text/plain' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'base_colors-untitled.json';
+		a.click();
+	};
+
+	const mapColorObject = (obj) => {
+		return Object.keys(obj).map((color) => {
+			if (color !== 'colordef') {
+				return {
+					name: color,
+					r: obj[color][0],
+					g: obj[color][1],
+					b: obj[color][2]
+				};
+			} else {
+				return {
+					name: obj[color]
+				};
+			}
+		});
+	};
+
+	const readFile = (event) => {
 		const file = event.target.files[0];
-    // df_file_name = `base_colors-${file.name.replace('.txt', '')}.json`;
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			const data = JSON.parse(event.target.result);
+			const obj = data[0];
+			console.log('objcdda : ', obj);
+			colors = mapColorObject(obj);
+		};
+		reader.readAsText(file);
+	};
+
+	const readDFcolors = (event) => {
+		const file = event.target.files[0];
+		// df_file_name = `base_colors-${file.name.replace('.txt', '')}.json`;
 		const reader = new FileReader();
 		reader.onload = async (event) => {
-      const data = event.target.result;
-      const obj = await extractFromDFcolors(data);
-      console.log('obj : ', obj);
-      $colors = mapColorObject(obj[0]);
-      console.log('output : ', $colors);
+			const data = event.target.result;
+			const obj = await extractFromDFcolors(data);
+			colors = mapColorObject(obj[0]);
 		};
 
 		reader.readAsText(file);
 	};
-
 </script>
 
-<!-- <hr /> -->
+<div class="col-adjust">
+  <h2 class="f-light">Adjust</h2>
+	
+	<p style="font-size: 0.75rem">
+		Click the colors for a color picker and/or <button
+			class="btn"
+			on:click={() => (showRGBcontrols = !showRGBcontrols)}>toggle RGB sliders</button
+		>
+	</p>
+	<div class="picker-blocks">
+		{#each sorted as color}
+			<RGBPicker bind:color bind:showRGBcontrols />
+		{/each}
+	</div>
+  <div class="controls">
+		<label for="startfile">(optional) load a CDDA color file <input
+      type="file"
+      class="input"
+      name="startfile"
+      on:change={readFile}
+      accept="application/json" />
+    </label
+		>
+		<label for="df_file">(optional) load a Dwarf Fortress color file <input
+      type="file"
+      class="input"
+      name="df_file"
+      on:change={readDFcolors}
+      accept="text/plain"/>
+    </label>
+	</div>
+</div>
 
 <div class="cols">
-  <div class="blocks">
-    <h2 class="f-light">Adjust</h2>
-    <label for="startfile">(optional) load a CDDA color file<br><input type="file" name="startfile" on:change={readFile} /></label>
-    <label for="df_file">(optional) load a Dwarf Fortress color file<br><input type="file" name="startfile" on:change={readDFcolors} /></label>
-    <p style="font-size: 0.75rem">click the colors for a color picker</p>
-    {#each $colors.slice(1) as color}
-      <RGBPicker bind:color />
-    {/each}
-  </div>
-  <div class="outputobj">
-    <h2 class="f-light">Output</h2>
-    <button on:click={writeToFile}>download as base_colors.json</button><br>or copy the object below into<br><code>&lt;CDDA_PATH&gt;/config/base_colors.json</code>
-    <br>
-<textarea readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
+	<div class="col-output">
+		<h2 class="f-light">Output</h2>
+		<textarea readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
 {output}{suffix}</textarea>
-  </div>
-  <div class="combos">
-    <h2 class="f-light">Preview</h2>
-    <Combos bind:colors={$colors} />
-  </div>
+		<h3>Instructions</h3>
+    <p>You can paste the above code into:<br /><code>&lt;CDDA_PATH&gt;/config/base_colors.json</code></p>
+    <p>If you're using Catapult launcher, the file might be here: <br /><code>&lt;CDDA_PATH&gt;/dda/userdata/config/base_colors.json</code></p>
+		<p>Or you can download a .json file</p>
+		<button class="btn wide" on:click={writeToFile}>download .json file</button>
+		<ol>
+			<li>Put the generated json file here:<br><code>&lt;CDDA_PATH&gt;/data/raw/color_themes/base_colors-YOURTHEME.json</code></li>
+			<li>Launch Cataclysm</li>
+			<li>In the start menu, choose <code>[Settings]</code></li>
+			<li>Choose <code>&gt;&gt; Colors</code></li>
+			<li>Press <code>C</code> and choose your theme from the list.</li>
+		</ol>
+		<p>You may need to reload the game to see the changes.</p>
+	</div>
+
+	<div class="col-preview">
+		<h2 class="f-light">Preview</h2>
+		<Combos bind:colors />
+	</div>
 </div>
 
 <style>
-  code {
+	code {
     font-family: monospace;
     color: #a4d9e9;
   }
+
   textarea {
     margin-top: 1rem;
-    /* height: 22rem; */
     width: fit-content;
     padding: 1rem 1rem 0 1rem;
     border: 1px solid #888;
     color: #eee;
-    background-color: rgb(36,31,40);
+    background-color: rgb(36, 31, 40);
   }
 
   .cols {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    gap: 3rem;
+    gap: 1rem;
   }
 
-  .outputobj, .blocks label, .blocks input {
+  .picker-blocks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12.5%, 1fr));
+    grid-gap: 0;
+  }
+
+  @media (max-width: 960px) {
+    .picker-blocks {
+      grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
+    }
+  }
+  @media (max-width: 600px) {  
+    .picker-blocks {
+      grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+    }
+  }
+
+  .col-adjust .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    height: min-content;
     font-size: 0.75rem;
   }
 
-  .blocks label {
-    display: block;
-    margin-bottom: 1rem;
+  .col-adjust label,
+  .col-adjust h2 {
+    margin: 0;
   }
 
-  .outputobj h2 {
-    font-size: 1.5rem;
+  .col-adjust {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
   }
 
-  .outputobj button {
-    font-size: inherit;
-  }
   .f-light {
     font-weight: 400;
+  }
+  ol {
+    padding: 0 0 0 1rem;
   }
 </style>

@@ -16,13 +16,14 @@
   
 <style>
   input[type="color"] {
-    width: 200px;
-    height: 50px;
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-  }
-  input[type="color"]::-moz-color-swatch {
+  width: 100%;
+  height: 50px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+input[type="color"]::-moz-color-swatch {
   border: none;
 }
 
