@@ -17,9 +17,9 @@
 	<h2>{color.name}</h2>
 	<ColorPicker bind:color on:updateColor={updateColor}/>
 	<div class="accordion" use:accordion={showRGBcontrols}>
-		<label for="r">r: 
-			<input type="range" name="r" min="0" max="255" bind:value={color.r} />
-			<input type="number" name="r" min="0" max="255" bind:value={color.r} />
+		<label for="{color.name}_r">r: 
+			<input type="range" name="{color.name}_r" min="0" max="255" bind:value={color.r} />
+			<input type="number" name="{color.name}_rn" min="0" max="255" bind:value={color.r} />
 		</label>
 		<label for="g">g:
 			<input type="range" name="g" min="0" max="255" bind:value={color.g} />
@@ -32,40 +32,4 @@
 	</div>
 
 </div>
-
-<style>
-	.picker {
-		position: relative;
-		padding: 0 0.5rem;
-		margin-bottom: 1rem;
-	}
-	.accordion {
-		opacity: 0;
-		height: 0;
-	}
-	h2 {
-		font-size: 0.8rem;
-		color: #eee;
-		margin: 0;
-		font-family: monospace;
-	}
-
-	input[type='range'] {
-		width: 100%;
-	}
-
-	input[type='number'] {
-		font-size: 0.7rem;
-		height: min-content;
-		width: 2.5rem;
-	}
-
-	label {
-		display: flex;
-		justify-content: space-between;
-		max-width: 100%;
-		font-size: 0.7rem;
-	}
-	
-</style>
 

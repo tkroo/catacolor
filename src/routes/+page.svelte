@@ -2,6 +2,7 @@
 	import Combos from '$lib/Combos.svelte';
 	import RGBPicker from '$lib/RGBPicker.svelte';
 	import { extractFromDFcolors } from '$lib/utils';
+	import { extractFromGoghColors } from '$lib/utils';
 
 	let showRGBcontrols = false;
 
@@ -25,31 +26,11 @@
 		{ name: 'WHITE', r: 255, g: 255, b: 255 }
 	];
 
-	const ordered = [
-		'BLACK',
-		'RED',
-		'GREEN',
-		'BROWN',
-		'BLUE',
-		'MAGENTA',
-		'CYAN',
-		'GRAY',
-		'DGRAY',
-		'LRED',
-		'LGREEN',
-		'YELLOW',
-		'LBLUE',
-		'LMAGENTA',
-		'LCYAN',
-		'WHITE'
-	];
+	const ordered = [ 'BLACK', 'RED', 'GREEN', 'BROWN', 'BLUE', 'MAGENTA', 'CYAN', 'GRAY', 'DGRAY', 'LRED', 'LGREEN', 'YELLOW', 'LBLUE', 'LMAGENTA', 'LCYAN', 'WHITE' ];
 
 	$: sorted = colors.slice(1).sort((a, b) => {
 		return ordered.indexOf(a.name) - ordered.indexOf(b.name);
 	});
-
-	// const prefix = '[<br>  {';
-	// const suffix = '  }<br>]';
 
 	const prefix = '[\n  {\n    "type": "colordef",';
 	const suffix = '\n  }\n]';
@@ -63,7 +44,7 @@
 		.join(',\n');
 
 	const writeToFile = () => {
-		const blob = new Blob([prefix_file, output.slice(1), suffix_file], { type: 'text/plain' });
+		const blob = new Blob([prefix_file, output, suffix_file], { type: 'text/plain' });
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
@@ -88,40 +69,39 @@
 		});
 	};
 
-	const readFile = (event) => {
+	const readFiles = (event) => {
+		console.log('readFiles() event.target.dataset.filetype: ', event.target.dataset.filetype);
 		const file = event.target.files[0];
 		const reader = new FileReader();
-		reader.onload = (event) => {
-			const data = JSON.parse(event.target.result);
-			const obj = data[0];
-			console.log('objcdda : ', obj);
-			colors = mapColorObject(obj);
-		};
-		reader.readAsText(file);
-	};
-
-	const readDFcolors = (event) => {
-		const file = event.target.files[0];
-		// df_file_name = `base_colors-${file.name.replace('.txt', '')}.json`;
-		const reader = new FileReader();
+		const filetype = event.target.dataset.filetype;
 		reader.onload = async (event) => {
-			const data = event.target.result;
-			const obj = await extractFromDFcolors(data);
-			colors = mapColorObject(obj[0]);
+			if(filetype === 'cdda') {
+				const data = JSON.parse(event.target.result);
+				const obj = data[0];
+				colors = mapColorObject(obj);
+			}
+			if(filetype === 'df') {
+				const data = event.target.result;
+				const obj = await extractFromDFcolors(data);
+				colors = mapColorObject(obj[0]);
+			}
+			if(filetype === 'gogh') {
+				const data = JSON.parse(event.target.result);
+				const obj = await extractFromGoghColors(data);
+				colors = mapColorObject(obj);
+			}
+			
 		};
-
 		reader.readAsText(file);
-	};
+	}
+
 </script>
 
 <div class="col-adjust">
   <h2 class="f-light">Adjust</h2>
 	
 	<p style="font-size: 0.75rem">
-		Click the colors for a color picker and/or <button
-			class="btn"
-			on:click={() => (showRGBcontrols = !showRGBcontrols)}>toggle RGB sliders</button
-		>
+		Click the colors for a color picker and/or <button class="btn" on:click={() => (showRGBcontrols = !showRGBcontrols)}>toggle RGB sliders</button>
 	</p>
 	<div class="picker-blocks">
 		{#each sorted as color}
@@ -129,28 +109,37 @@
 		{/each}
 	</div>
   <div class="controls">
-		<label for="startfile">(optional) load a CDDA color file <input
+		<label for="cdda_file">(optional) load a <a href="https://github.com/CleverRaven/Cataclysm-DDA/tree/master/data/raw/color_themes">CDDA color file</a> <input
       type="file"
       class="input"
-      name="startfile"
-      on:change={readFile}
+      name="cdda_file"
+			data-filetype="cdda"
+      on:change={readFiles}
       accept="application/json" />
-    </label
-		>
-		<label for="df_file">(optional) load a Dwarf Fortress color file <input
+    </label>
+		<label for="df_file">(optional) load a <a href="https://manmademagic.github.io/DFColorGen/">Dwarf Fortress color file</a> <input
       type="file"
       class="input"
       name="df_file"
-      on:change={readDFcolors}
+			data-filetype="df"
+      on:change={readFiles}
       accept="text/plain"/>
+    </label>
+		<label for="gogh_file">(optional) load a <a href="https://github.com/Gogh-Co/Gogh/tree/master/json">Gogh color file</a> <input
+      type="file"
+      class="input"
+      name="gogh_file"
+			data-filetype="gogh"
+      on:change={readFiles}
+      accept="application/json" />
     </label>
 	</div>
 </div>
 
 <div class="cols">
 	<div class="col-output">
-		<h2 class="f-light">Output</h2>
-		<textarea readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
+		<label for="output"><h2 class="output-label">Output</h2></label>
+			<textarea name="output" id="output" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
 {output}{suffix}</textarea>
 		<h3>Instructions</h3>
     <p>You can paste the above code into:<br /><code>&lt;CDDA_PATH&gt;/config/base_colors.json</code></p>
@@ -172,71 +161,3 @@
 		<Combos bind:colors />
 	</div>
 </div>
-
-<style>
-	code {
-    font-family: monospace;
-    color: #a4d9e9;
-  }
-
-  textarea {
-    margin-top: 1rem;
-    width: fit-content;
-    padding: 1rem 1rem 0 1rem;
-    border: 1px solid #888;
-    color: #eee;
-    background-color: rgb(36, 31, 40);
-  }
-
-  .cols {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .picker-blocks {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12.5%, 1fr));
-    grid-gap: 0;
-  }
-
-  @media (max-width: 960px) {
-    .picker-blocks {
-      grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
-    }
-  }
-  @media (max-width: 600px) {  
-    .picker-blocks {
-      grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
-    }
-  }
-
-  .col-adjust .controls {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 1rem;
-    margin: 0;
-    padding: 0;
-    height: min-content;
-    font-size: 0.75rem;
-  }
-
-  .col-adjust label,
-  .col-adjust h2 {
-    margin: 0;
-  }
-
-  .col-adjust {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #eee;
-  }
-
-  .f-light {
-    font-weight: 400;
-  }
-  ol {
-    padding: 0 0 0 1rem;
-  }
-</style>

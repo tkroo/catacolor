@@ -17,7 +17,7 @@
 <style>
   input[type="color"] {
   width: 100%;
-  height: 50px;
+  height: 3rem;
   border: 0;
   padding: 0;
   cursor: pointer;

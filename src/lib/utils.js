@@ -1,3 +1,5 @@
+import hexRgb from "hex-rgb";
+
 export const extractFromDFcolors = async (input) => {
   const lines = input.split('\n').filter(line => line.trim() !== '');
   const colorObject = { type: 'colordef', };
@@ -15,6 +17,38 @@ export const extractFromDFcolors = async (input) => {
     colorObject[colorName].push(...arr); // Add color value to array
   }    
   return [colorObject];
+}
+
+const GoghTranslateArr =
+  {color_01: 'BLACK',
+  color_02: 'RED',
+  color_03: 'GREEN',
+  color_04: 'BROWN',
+  color_05: 'BLUE',
+  color_06: 'MAGENTA',
+  color_07: 'CYAN',
+  color_08: 'GRAY',
+  color_09: 'DGRAY',
+  color_10: 'LRED',
+  color_11: 'LGREEN',
+  color_12: 'YELLOW',
+  color_13: 'LBLUE',
+  color_14: 'LMAGENTA',
+  color_15: 'LCYAN',
+  color_16: 'WHITE'}
+
+export const extractFromGoghColors = async (input) => {
+  delete input.foreground;
+  delete input.background;
+  delete input.name;
+  delete input.hash;
+  delete input.cursor;
+  let result = { type: 'colordef' };
+  for (const property in input) {
+    let rgb = hexRgb(input[property]);
+    result[GoghTranslateArr[property]] = [rgb.red, rgb.green, rgb.blue];
+  }
+  return result;   
 }
 
 
