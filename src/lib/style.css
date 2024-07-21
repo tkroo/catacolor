@@ -216,3 +216,35 @@ ol {
   width: 128px;
   display: inline-block;
 }
+
+
+.error {
+  font-weight: bold;
+  color: red;
+}
+.warning {
+  font-weight: bold;
+  color: orange;
+}
+.success {
+  font-weight: bold;
+  color: green;
+}
+
+.external-link {
+  position: relative;
+}
+
+.external-link::after {
+  content: '↗️';
+  padding-left: 0.5rem;
+  /* position: absolute; */
+  /* top: 0; */
+  /* left: 0; */
+  /* padding: 1rem; */
+}
+
+a svg {
+  fill: currentColor;
+  stroke: currentColor;
+}

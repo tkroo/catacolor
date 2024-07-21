@@ -1,9 +1,11 @@
 <script>
 	import Combos from '$lib/Combos.svelte';
 	import RGBPicker from '$lib/RGBPicker.svelte';
-	import { extractFromDFcolors } from '$lib/utils';
-	import { extractFromGoghColors } from '$lib/utils';
-
+	import { detectThemeFormat } from '$lib/utils';
+	import External from '$lib/External.svelte';
+	import { formats } from "$lib/stores";
+	let message = null;
+	let success = false;
 	let showRGBcontrols = false;
 
 	let colors = [
@@ -52,46 +54,22 @@
 		a.click();
 	};
 
-	const mapColorObject = (obj) => {
-		return Object.keys(obj).map((color) => {
-			if (color !== 'colordef') {
-				return {
-					name: color,
-					r: obj[color][0],
-					g: obj[color][1],
-					b: obj[color][2]
-				};
-			} else {
-				return {
-					name: obj[color]
-				};
-			}
-		});
-	};
-
-	const readFiles = (event) => {
-		console.log('readFiles() event.target.dataset.filetype: ', event.target.dataset.filetype);
+	const readFile = (event) => {
 		const file = event.target.files[0];
 		const reader = new FileReader();
-		const filetype = event.target.dataset.filetype;
-		reader.onload = async (event) => {
-			if(filetype === 'cdda') {
-				const data = JSON.parse(event.target.result);
-				const obj = data[0];
-				colors = mapColorObject(obj);
+		reader.onload = async(event) => {
+			const data = event.target.result;
+			let tmp = await detectThemeFormat(data, file);
+			console.log(tmp);
+			if (tmp.colors.length == 17) {
+				message = `LOADED: ${tmp.file_type} theme`;
+				success = true;
+				colors = tmp.colors;
+			} else {
+				success = false;
+				message = `ERROR: unexpected format`;
 			}
-			if(filetype === 'df') {
-				const data = event.target.result;
-				const obj = await extractFromDFcolors(data);
-				colors = mapColorObject(obj[0]);
-			}
-			if(filetype === 'gogh') {
-				const data = JSON.parse(event.target.result);
-				const obj = await extractFromGoghColors(data);
-				colors = mapColorObject(obj);
-			}
-			
-		};
+		}
 		reader.readAsText(file);
 	}
 
@@ -109,30 +87,17 @@
 		{/each}
 	</div>
   <div class="controls">
-		<label for="cdda_file">(optional) load a <a href="https://github.com/CleverRaven/Cataclysm-DDA/tree/master/data/raw/color_themes">CDDA color file</a> <input
+		<label for="importTheme">optional: load a {#each $formats as format, i}
+			<a href="{format.url}">{format.name}</a>{#if i < $formats.length - 1}&nbsp;or&nbsp;{/if}
+			{/each}
+			theme. <a href="/about">(more info)</a>
+		<input
       type="file"
       class="input"
-      name="cdda_file"
-			data-filetype="cdda"
-      on:change={readFiles}
-      accept="application/json" />
+      name="importTheme"
+      on:change={readFile}/>
     </label>
-		<label for="df_file">(optional) load a <a href="https://manmademagic.github.io/DFColorGen/">Dwarf Fortress color file</a> <input
-      type="file"
-      class="input"
-      name="df_file"
-			data-filetype="df"
-      on:change={readFiles}
-      accept="text/plain"/>
-    </label>
-		<label for="gogh_file">(optional) load a <a href="https://github.com/Gogh-Co/Gogh/tree/master/json">Gogh color file</a> <input
-      type="file"
-      class="input"
-      name="gogh_file"
-			data-filetype="gogh"
-      on:change={readFiles}
-      accept="application/json" />
-    </label>
+		{#if message}<span class="{success ? 'success' : 'error'}">{message}</span>{/if}
 	</div>
 </div>
 
@@ -161,3 +126,4 @@
 		<Combos bind:colors />
 	</div>
 </div>
+
