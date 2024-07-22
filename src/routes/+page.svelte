@@ -2,7 +2,6 @@
 	import Combos from '$lib/Combos.svelte';
 	import RGBPicker from '$lib/RGBPicker.svelte';
 	import { detectThemeFormat } from '$lib/utils';
-	import External from '$lib/External.svelte';
 	import { formats } from "$lib/stores";
 	let message = null;
 	let success = false;
