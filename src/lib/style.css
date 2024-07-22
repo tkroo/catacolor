@@ -26,10 +26,12 @@ header {
 }
 header span {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
 }
 header span p {
   font-size: 0.75rem;
+  margin:0;
 }
 header h1 {
   margin: 0;
