@@ -10,6 +10,16 @@
 		color.b = e.detail.mycolor.blue;
 		color = color;
 	}
+
+	const constrainRGB = () => {
+		color.r = Math.max(0, Math.min(255, color.r));
+		color.g = Math.max(0, Math.min(255, color.g));
+		color.b = Math.max(0, Math.min(255, color.b));
+	}
+
+	$: color.r , constrainRGB();
+	$: color.g , constrainRGB();
+	$: color.b , constrainRGB();
 </script>
 
 <div class="picker">
