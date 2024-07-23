@@ -3,7 +3,6 @@
 	import RGBPicker from '$lib/RGBPicker.svelte';
 	import { detectThemeFormat } from '$lib/utils';
 	import { formats } from "$lib/stores";
-  import CopyClipBoard from '$lib/CopyClipBoard.svelte';
 	let message = null;
 	let success = false;
 	let showRGBcontrols = false;
