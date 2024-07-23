@@ -88,6 +88,10 @@ header h1 .svg {
   transition-duration: 0.2s;
 }
 
+#file-upload {
+  display: none;
+}
+
 h1, h2 {
   margin: 0;
 }
@@ -219,18 +223,20 @@ ol {
   display: inline-block;
 }
 
+.error, .warning, .success {
+  font-size: 0.75rem;
+  font-weight: bold;
+}
 
 .error {
-  font-weight: bold;
-  color: red;
+  color: rgb(255, 38, 0);
 }
 .warning {
-  font-weight: bold;
   color: orange;
 }
 .success {
-  font-weight: bold;
-  color: green;
+  /* color: green; */
+  color: #96FF00;
 }
 
 .external-link {
@@ -249,4 +255,12 @@ ol {
 a svg {
   fill: currentColor;
   stroke: currentColor;
+}
+
+.smaller {
+  font-size: 0.75rem;
+}
+
+#outputEL {
+  display: block;
 }

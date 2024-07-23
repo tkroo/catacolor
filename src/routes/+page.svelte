@@ -3,6 +3,7 @@
 	import RGBPicker from '$lib/RGBPicker.svelte';
 	import { detectThemeFormat } from '$lib/utils';
 	import { formats } from "$lib/stores";
+  import CopyClipBoard from '$lib/CopyClipBoard.svelte';
 	let message = null;
 	let success = false;
 	let showRGBcontrols = false;
@@ -61,7 +62,7 @@
 			let tmp = await detectThemeFormat(data, file);
 			console.log(tmp);
 			if (tmp.colors.length == 17) {
-				message = `LOADED: ${tmp.file_type} theme`;
+				message = `LOADED ${tmp.file_type} theme: '${file.name}'`;
 				success = true;
 				colors = tmp.colors;
 			} else {
@@ -71,6 +72,7 @@
 		}
 		reader.readAsText(file);
 	}
+
 
 </script>
 
@@ -86,14 +88,18 @@
 		{/each}
 	</div>
   <div class="controls">
-		<label for="importTheme">optional: load a {#each $formats as format, i}
+    <div class="smaller">
+      optional: load a {#each $formats as format, i}
 			<a href="{format.url}">{format.name}</a>{#if i < $formats.length - 1}&nbsp;or&nbsp;{/if}
 			{/each}
 			theme. <a href="/about">(more info)</a>
+    </div>
+		<label for="file-upload" class="btn custom-file-upload">load theme
 		<input
+      id="file-upload"
       type="file"
       class="input"
-      name="importTheme"
+      name="file-upload"
       on:change={readFile}/>
     </label>
 		{#if message}<span class="{success ? 'success' : 'error'}">{message}</span>{/if}
@@ -102,22 +108,13 @@
 
 <div class="cols">
 	<div class="col-output">
-		<label for="output"><h2 class="output-label">Output</h2></label>
-			<textarea name="output" id="output" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
+		<h2>Output</h2>
+			<!-- <textarea name="output" id="output" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix} -->
+      <!-- <button class="btn clicktocopy" on:click={copy}>copy output</button> -->
+      <button class="btn" on:click={writeToFile}>download .json file</button>
+      <a class="smaller" href="/about#instructions">(instructions)</a>
+			<textarea name="outputEL" id="outputEL" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
 {output}{suffix}</textarea>
-		<h3>Instructions</h3>
-    <p>You can paste the above code into:<br /><code>&lt;CDDA_PATH&gt;/config/base_colors.json</code></p>
-    <p>If you're using Catapult launcher, the file might be here: <br /><code>&lt;CDDA_PATH&gt;/dda/userdata/config/base_colors.json</code></p>
-		<p>Or you can download a .json file</p>
-		<button class="btn wide" on:click={writeToFile}>download .json file</button>
-		<ol>
-			<li>Put the generated json file here:<br><code>&lt;CDDA_PATH&gt;/data/raw/color_themes/base_colors-YOURTHEME.json</code></li>
-			<li>Launch Cataclysm</li>
-			<li>In the start menu, choose <code>[Settings]</code></li>
-			<li>Choose <code>&gt;&gt; Colors</code></li>
-			<li>Press <code>C</code> and choose your theme from the list.</li>
-		</ol>
-		<p>You may need to reload the game to see the changes.</p>
 	</div>
 
 	<div class="col-preview">
