@@ -122,14 +122,19 @@ textarea {
   grid-template-columns: repeat(auto-fit, minmax(12.5%, 1fr));
   grid-gap: 0;
 }
+.new-picker-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12.5%, 1fr));
+  grid-gap: 0;
+}
 
 @media (max-width: 960px) {
-  .picker-blocks {
+  .picker-blocks, .new-picker-blocks {
     grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
   }
 }
 @media (max-width: 600px) {  
-  .picker-blocks {
+  .picker-blocks, .new-picker-blocks {
     grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
   }
 }
@@ -175,7 +180,7 @@ ol {
   height: 0;
   margin-top: 0.5rem;
 }
-.picker h2 {
+/* .picker h2 {
   font-size: 0.8rem;
   color: #eee;
   margin: 0;
@@ -197,7 +202,7 @@ ol {
   justify-content: space-between;
   max-width: 100%;
   font-size: 0.7rem;
-}
+} */
 
 
 /* Preview */
@@ -237,19 +242,6 @@ ol {
 .success {
   /* color: green; */
   color: #96FF00;
-}
-
-.external-link {
-  position: relative;
-}
-
-.external-link::after {
-  content: '↗️';
-  padding-left: 0.5rem;
-  /* position: absolute; */
-  /* top: 0; */
-  /* left: 0; */
-  /* padding: 1rem; */
 }
 
 a svg {

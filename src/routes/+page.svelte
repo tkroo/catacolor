@@ -1,36 +1,37 @@
 <script>
 	import Combos from '$lib/Combos.svelte';
-	import RGBPicker from '$lib/RGBPicker.svelte';
+	// import ColorPicker from '$lib/ColorPicker.svelte';
 	import { detectThemeFormat } from '$lib/utils';
 	import { formats } from "$lib/stores";
+	import NewColorBlock from '../lib/NewColorBlock.svelte';
 	let message = null;
 	let success = false;
-	let showRGBcontrols = false;
+	let showControls = false;
 
 	let colors = [
 		{ type: 'colordef' },
-		{ name: 'BLACK', r: 36, g: 31, b: 40 },
-		{ name: 'RED', r: 192, g: 28, b: 40 },
-		{ name: 'GREEN', r: 24, g: 139, b: 24 },
-		{ name: 'BROWN', r: 99, g: 69, b: 44 },
-		{ name: 'BLUE', r: 26, g: 95, b: 180 },
-		{ name: 'MAGENTA', r: 179, g: 45, b: 145 },
-		{ name: 'CYAN', r: 0, g: 164, b: 164 },
-		{ name: 'GRAY', r: 185, g: 185, b: 185 },
-		{ name: 'DGRAY', r: 127, g: 127, b: 127 },
-		{ name: 'LRED', r: 251, g: 115, b: 115 },
-		{ name: 'LGREEN', r: 15, g: 198, b: 61 },
-		{ name: 'YELLOW', r: 255, g: 201, b: 60 },
-		{ name: 'LBLUE', r: 98, g: 160, b: 234 },
-		{ name: 'LMAGENTA', r: 229, g: 126, b: 213 },
-		{ name: 'LCYAN', r: 84, g: 244, b: 254 },
-		{ name: 'WHITE', r: 255, g: 255, b: 255 }
+		{ NAME: 'BLACK', R: 36, G: 31, B: 40 },
+		{ NAME: 'RED', R: 192, G: 28, B: 40 },
+		{ NAME: 'GREEN', R: 24, G: 139, B: 24 },
+		{ NAME: 'BROWN', R: 99, G: 69, B: 44 },
+		{ NAME: 'BLUE', R: 26, G: 95, B: 180 },
+		{ NAME: 'MAGENTA', R: 179, G: 45, B: 145 },
+		{ NAME: 'CYAN', R: 0, G: 164, B: 164 },
+		{ NAME: 'GRAY', R: 185, G: 185, B: 185 },
+		{ NAME: 'DGRAY', R: 127, G: 127, B: 127 },
+		{ NAME: 'LRED', R: 251, G: 115, B: 115 },
+		{ NAME: 'LGREEN', R: 15, G: 198, B: 61 },
+		{ NAME: 'YELLOW', R: 255, G: 201, B: 60 },
+		{ NAME: 'LBLUE', R: 98, G: 160, B: 234 },
+		{ NAME: 'LMAGENTA', R: 229, G: 126, B: 213 },
+		{ NAME: 'LCYAN', R: 84, G: 244, B: 254 },
+		{ NAME: 'WHITE', R: 255, G: 255, B: 255 }
 	];
 
 	const ordered = [ 'BLACK', 'RED', 'GREEN', 'BROWN', 'BLUE', 'MAGENTA', 'CYAN', 'GRAY', 'DGRAY', 'LRED', 'LGREEN', 'YELLOW', 'LBLUE', 'LMAGENTA', 'LCYAN', 'WHITE' ];
 
 	$: sorted = colors.slice(1).sort((a, b) => {
-		return ordered.indexOf(a.name) - ordered.indexOf(b.name);
+		return ordered.indexOf(a.NAME) - ordered.indexOf(b.NAME);
 	});
 
 	const prefix = '[\n  {\n    "type": "colordef",';
@@ -40,7 +41,7 @@
 
 	$: output = [...colors.slice(1)]
 		.map((color) => {
-			return `    "${color.name}": [ ${color.r}, ${color.g}, ${color.b} ]`;
+			return `    "${color.NAME}": [ ${color.R}, ${color.G}, ${color.B} ]`;
 		})
 		.join(',\n');
 
@@ -59,7 +60,6 @@
 		reader.onload = async(event) => {
 			const data = event.target.result;
 			let tmp = await detectThemeFormat(data, file);
-			console.log(tmp);
 			if (tmp.colors.length == 17) {
 				message = `LOADED ${tmp.file_type} theme: '${file.name}'`;
 				success = true;
@@ -79,11 +79,12 @@
   <h2 class="f-light">Adjust</h2>
 	
 	<p style="font-size: 0.75rem">
-		Click the colors for a color picker and/or <button class="btn" on:click={() => (showRGBcontrols = !showRGBcontrols)}>toggle RGB sliders</button>
+		Click the colors for a color picker and/or <button class="btn" on:click={() => (showControls = !showControls)}>toggle controls</button>
 	</p>
-	<div class="picker-blocks">
+	<div class="new-picker-blocks">
 		{#each sorted as color}
-			<RGBPicker bind:color bind:showRGBcontrols />
+			<NewColorBlock bind:color bind:showControls />
+			<!-- <ColorPicker bind:color bind:showRGBcontrols bind:showHSLcontrols /> -->
 		{/each}
 	</div>
   <div class="controls">

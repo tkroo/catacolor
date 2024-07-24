@@ -1,38 +1,30 @@
 <script>
-  export let color = 'none';
-  import { createEventDispatcher } from 'svelte';
-  let dispatch = createEventDispatcher();
+	import { accordion } from '$lib/utils';
+	import ColorSwatch from "./ColorSwatch.svelte";
+	import RGBSliders from './RGBSliders.svelte';
+	import HSLSliders from './HSLSliders.svelte';
+	export let color;
+	export let showRGBcontrols = false;
+	export let showHSLcontrols = false;
 
-  import rgbHex from "rgb-hex";
-  import hexRgb from "hex-rgb";
-  $: hex = "#" + rgbHex(color.r, color.g, color.b);
-
-  const updateColor = (e) => {
-    dispatch('updateColor', {'mycolor': hexRgb(e.target.value)});
-  }
+	const updateColor = (e) => {
+		color.R = e.detail.mycolor.red;
+		color.G = e.detail.mycolor.green;
+		color.B = e.detail.mycolor.blue;
+		color = color;
+	}
 </script>
 
-<label for="color_{color.name}" title="click to edit color"><input type="color" id="color_{color.name}" value={hex} on:input={updateColor} /></label>
-  
-<style>
-  input[type="color"] {
-  width: 100%;
-  height: 3rem;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
+<div class="picker">
 
-input[type="color"]::-moz-color-swatch {
-  border: none;
-}
+	<h2>{color.NAME}</h2>
+	<ColorSwatch bind:color on:updateColor={updateColor}/>
+	<div class="accordion" use:accordion={showRGBcontrols}>
+		<RGBSliders bind:color />
+	</div>
+	<div class="accordion" use:accordion={showHSLcontrols}>
+		<HSLSliders bind:color />
+	</div>
 
-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
-  border-radius: 0;
-}
+</div>
 
-input[type="color"]::-webkit-color-swatch {
-  border: none;
-}
-</style>

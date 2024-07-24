@@ -1,7 +1,3 @@
-<script>
-  import External from '$lib/External.svelte';
-</script>
-
 <svelte:head>
   <title>CataColor</title>
 </svelte:head>

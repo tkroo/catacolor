@@ -26,6 +26,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"colortranslator": "^4.1.0",
 		"hex-rgb": "^5.0.0",
 		"rgb-hex": "^4.1.0"
 	}

@@ -37,24 +37,6 @@ color_14: 'LMAGENTA',
 color_15: 'LCYAN',
 color_16: 'WHITE'};
 
-// const base16TranslateObj = {
-// base00: 'BLACK',
-// base01: 'DGRAY',
-// base02: 'LMAGENTA',
-// base03: 'LGREEN',
-// base04: 'LCYAN',
-// base05: 'MAGENTA',
-// base06: 'GRAY',
-// base07: 'WHITE',
-// base08: 'RED',
-// base09: 'CYAN',
-// base0A: 'YELLOW',
-// base0B: 'GREEN',
-// base0C: 'LBLUE',
-// base0D: 'BLUE',
-// base0E: 'LRED',
-// base0F: 'BROWN'};
-
 const extractFromGoghColors = async (input) => {
   delete input.foreground;
   delete input.background;
@@ -86,13 +68,13 @@ const mapColorObject = (obj) => {
     if (color !== 'colordef') {
       return {
         name: color,
-        r: obj[color][0],
-        g: obj[color][1],
-        b: obj[color][2]
+        R: obj[color][0],
+        G: obj[color][1],
+        B: obj[color][2]
       };
     } else {
       return {
-        name: obj[color]
+        NAME: obj[color]
       };
     }
   });
@@ -119,23 +101,6 @@ export const detectThemeFormat = async (data, file) => {
       }
     }
 
-    // likely a base16 file
-    // if(file.name.split('.').pop() == 'vim' && data.split('\n').shift() == 'hi clear') {
-    //   let lines = data.split('\n').slice(3,7);
-    //   lines = lines.map(x => x.replaceAll(/[\\'"]/gm, '')
-    //   .trim())
-    //   .join()
-    //   .replaceAll('"', '')
-    //   .replaceAll(' ', '')
-    //   .replaceAll('=', ':')
-    //   .split(',')
-    //   .filter(x => x != '')
-    //   .map(x => {return {name: x.split(':')[0], color: x.split(':')[1]}});
-    //   const obj = await extractFromBase16Colors(lines);
-    //   file_type = 'base16-nvim';
-    //   colors = mapColorObject(obj);
-    // }
-
     // likely a Gogh file
     if (file.type == 'application/json' && JSON.parse(data).constructor.name == 'Object') {
       try {
@@ -155,7 +120,7 @@ export const detectThemeFormat = async (data, file) => {
 
 
 export function accordion(node, isOpen) {
-  let initialHeight = 70;
+  let initialHeight = 200;
   node.style.height = isOpen ? 'auto' : 0;
   node.style.opacity = isOpen ? 1 : 0;
   node.style.overflow = "hidden";
