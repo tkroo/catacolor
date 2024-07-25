@@ -51,30 +51,18 @@ const extractFromGoghColors = async (input) => {
   return result;   
 }
 
-// const extractFromBase16Colors = async (input) => {
-//   let result = { type: 'colordef' };
-//   for (const property in input) {
-//     let color = input[property].color;
-//     let name = input[property].name;
-//     let rgb = hexRgb(color);
-//     result[base16TranslateObj[name]] = [rgb.red, rgb.green, rgb.blue];
-//   }
-//   return result;
-// }
-
-
 const mapColorObject = (obj) => {
   return Object.keys(obj).map((color) => {
-    if (color !== 'colordef') {
+    if (color !== 'type') {
       return {
-        name: color,
+        NAME: color,
         R: obj[color][0],
         G: obj[color][1],
         B: obj[color][2]
       };
     } else {
       return {
-        NAME: obj[color]
+        type: 'colordef'
       };
     }
   });
@@ -114,7 +102,8 @@ export const detectThemeFormat = async (data, file) => {
         console.log(error);
       }
     }
-
+    console.log('colors: ', colors);
+    console.log('file_type: ', file_type);
     return {colors, file_type};
 }
 

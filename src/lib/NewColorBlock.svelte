@@ -15,6 +15,8 @@
   let HSL = initialColor.HSLObject;
   $: HSL, updateColor(null, new ColorTranslator(HSL).RGBObject);
 
+  $: color, updateColor(null, new ColorTranslator({R: color.R, G: color.G, B: color.B}).RGBObject);
+
   const updateColor = (e, v) => {
     const value = e ? e.target.value : {R:v.R, G:v.G, B:v.B};
     const newColor = new ColorTranslator(value, {decimals: 0});

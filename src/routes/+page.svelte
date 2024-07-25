@@ -27,6 +27,7 @@
 		{ NAME: 'WHITE', R: 255, G: 255, B: 255 }
 	];
 
+
 	const ordered = [ 'BLACK', 'RED', 'GREEN', 'BROWN', 'BLUE', 'MAGENTA', 'CYAN', 'GRAY', 'DGRAY', 'LRED', 'LGREEN', 'YELLOW', 'LBLUE', 'LMAGENTA', 'LCYAN', 'WHITE' ];
 
 	$: sorted = colors.slice(1).sort((a, b) => {
@@ -73,7 +74,6 @@
 
 
 </script>
-
 <div class="col-adjust">
   <h2 class="f-light">Adjust</h2>
 	
