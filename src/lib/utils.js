@@ -120,7 +120,7 @@ export const detectThemeFormat = async (data, file) => {
 
 
 export function accordion(node, isOpen) {
-  let initialHeight = 200;
+  let initialHeight = 220;
   node.style.height = isOpen ? 'auto' : 0;
   node.style.opacity = isOpen ? 1 : 0;
   node.style.overflow = "hidden";

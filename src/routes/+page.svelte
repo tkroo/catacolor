@@ -1,6 +1,5 @@
 <script>
 	import Combos from '$lib/Combos.svelte';
-	// import ColorPicker from '$lib/ColorPicker.svelte';
 	import { detectThemeFormat } from '$lib/utils';
 	import { formats } from "$lib/stores";
 	import NewColorBlock from '../lib/NewColorBlock.svelte';
@@ -79,12 +78,11 @@
   <h2 class="f-light">Adjust</h2>
 	
 	<p style="font-size: 0.75rem">
-		Click the colors for a color picker and/or <button class="btn" on:click={() => (showControls = !showControls)}>toggle controls</button>
+		Click the colors for the native color picker or <button class="btn" on:click={() => (showControls = !showControls)}>toggle controls</button>
 	</p>
 	<div class="new-picker-blocks">
 		{#each sorted as color}
 			<NewColorBlock bind:color bind:showControls />
-			<!-- <ColorPicker bind:color bind:showRGBcontrols bind:showHSLcontrols /> -->
 		{/each}
 	</div>
   <div class="controls">
@@ -111,7 +109,7 @@
 		<h2>Output</h2>
 			<!-- <textarea name="output" id="output" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix} -->
       <!-- <button class="btn clicktocopy" on:click={copy}>copy output</button> -->
-      <button class="btn" on:click={writeToFile}>download .json file</button>
+      <button class="btn btn-large" on:click={writeToFile}>download .json file</button>
       <a class="smaller" href="/about#instructions">(instructions)</a>
 			<textarea name="outputEL" id="outputEL" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
 {output}{suffix}</textarea>

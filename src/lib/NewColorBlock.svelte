@@ -80,8 +80,8 @@
     /* width: 320px; */
     /* border: 1px solid crimson; */
     /* gap: 1rem; */
-    margin-bottom: 2rem;
-    padding: 0.35rem;
+    /* margin-bottom: 2rem; */
+    padding: 0.35rem 0.35rem 0 0.35rem;
     font-size: 0.75rem;
     line-height: 1.5rem;
   }
