@@ -70,8 +70,10 @@ const mapColorObject = (obj) => {
 
 
 export const detectThemeFormat = async (data, file) => {
+  data = data.trim();
   let colors = [];
   let file_type = 'unknown';
+
   
     // likely a DF colors file
     if (file.type == 'text/plain' && data.split('\n').shift().slice(0,9) == '[BLACK_R:') {
