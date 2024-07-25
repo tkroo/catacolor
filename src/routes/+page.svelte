@@ -39,7 +39,7 @@
 	const prefix_file = '[\n  {\n    "type": "colordef",\n';
 	const suffix_file = '\n  }\n]';
 
-	$: output = [...colors.slice(1)]
+	$: output = [...sorted]
 		.map((color) => {
 			return `    "${color.NAME}": [ ${color.R}, ${color.G}, ${color.B} ]`;
 		})
@@ -117,7 +117,7 @@
 
 	<div class="col-preview">
 		<h2 class="f-light">Preview</h2>
-		<Combos bind:colors />
+		<Combos bind:sorted />
 	</div>
 </div>
 

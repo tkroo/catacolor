@@ -1,13 +1,13 @@
 <script>
-	export let colors;
+	export let sorted;
   import contrast from 'get-contrast';
 
-  const createCombos = (colors) => {
+  const createCombos = (sorted) => {
     const array = [];
-    for (const fg in colors.slice(1)) {
-      const fgColor = colors.slice(1)[fg];
-      for (const bg in colors.slice(1)) {
-        const bgColor = colors.slice(1)[bg];
+    for (const fg in sorted) {
+      const fgColor = sorted[fg];
+      for (const bg in sorted) {
+        const bgColor = sorted[bg];
         const combo = [bgColor, fgColor];
         if (combo[0].NAME != combo[1].NAME) array.push(combo);
       }
@@ -15,7 +15,7 @@
     return array;
   }
 
-  $:colorCombos = createCombos(colors);
+  $:colorCombos = createCombos(sorted);
 
   const myratio = (combo) => {
     let c1 = `rgb(${combo[0].R}, ${combo[0].G}, ${combo[0].B})`;
