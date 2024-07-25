@@ -1,11 +1,17 @@
 <script>
   import { ColorTranslator } from "colortranslator";
+  import { onMount } from "svelte";
+
+  let startColor = `hsl(${getRandom(0, 360)} ${getRandom(60, 99)}% ${getRandom(20, 50)}%)`;
+
+  onMount(() => {
+    startColor = `hsl(${getRandom(0, 360)} ${getRandom(60, 99)}% ${getRandom(20, 50)}%)`;
+  });
+
   function getRandom(min, max) {
     return Math.random() * (max - min) + min;
   }
 
-  let color = `hsl(${getRandom(0, 360)} ${getRandom(60, 99)}% ${getRandom(20, 50)}%)`;
-  let color2 = `hsl(${getRandom(0, 360)} ${getRandom(60, 99)}% ${getRandom(20, 50)}%)`;
   const generateColorWordThing = (c, word, reverse=false) => {
     const tints = ColorTranslator.getTints(c, word.length);
     if (reverse) tints.reverse();
@@ -20,7 +26,7 @@
 
 <header>
   <span>
-    <h1><a href="/" title="CataColor">{@html generateColorWordThing(color,'CataColor')}</a></h1>
+    <h1><a href="/" title="CataColor">{@html generateColorWordThing(startColor,'CataColor')}</a></h1>
     <!-- <h1><a href="/" title="CataColor"><span class="tint" style="color:{tints[0]}">Cat</span><span class="tint" style="color:{tints[1]}">aCo</span><span class="tint" style="color:{tints[2]}">lor</span></a></h1> -->
     <p>Color theme editor for Cataclysm: Dark Days Ahead</p>
     <!-- <p>{@html generateColorWordThing(color, 'Color theme editor for Cataclysm: Dark Days Ahead', true)}</p> -->
