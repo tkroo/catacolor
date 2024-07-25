@@ -106,7 +106,7 @@
 
 <div class="cols">
 	<div class="col-output">
-		<h2>Output</h2>
+		<h2 class="f-light">Output</h2>
 			<!-- <textarea name="output" id="output" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix} -->
       <!-- <button class="btn clicktocopy" on:click={copy}>copy output</button> -->
       <button class="btn btn-large" on:click={writeToFile}>download .json file</button>
