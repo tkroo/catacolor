@@ -76,11 +76,16 @@ export const detectThemeFormat = async (data, file) => {
 
   
     // likely a DF colors file
-    if (file.type == 'text/plain' && data.split('\n').shift().slice(0,9) == '[BLACK_R:') {
-      const obj = await extractFromDFcolors(data);
+    let dfdata = data.split('\n').filter(line => line.trim() !== '').map(x => x.trim());
+    let dfidx = dfdata.findIndex(x => x.includes('[BLACK_R:'));
+    dfdata = dfdata.slice(dfidx).join('\n');
+
+    if (file.type == 'text/plain' && dfdata.split('\n').shift().slice(0,9) == '[BLACK_R:') {
+      const obj = await extractFromDFcolors(dfdata);
       file_type = 'Dwarf Fortress';
       colors = mapColorObject(obj[0]);
     }
+
 
     // likely a CCDA file
     if (file.type == 'application/json' && JSON.parse(data).constructor.name == 'Array') {
@@ -91,6 +96,7 @@ export const detectThemeFormat = async (data, file) => {
       }
     }
 
+    
     // likely a Gogh file
     if (file.type == 'application/json' && JSON.parse(data).constructor.name == 'Object') {
       try {
