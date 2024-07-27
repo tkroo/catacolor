@@ -27,23 +27,16 @@
 		{ NAME: 'WHITE', R: 255, G: 255, B: 255 }
 	];
 
-
 	const ordered = [ 'BLACK', 'RED', 'GREEN', 'BROWN', 'BLUE', 'MAGENTA', 'CYAN', 'GRAY', 'DGRAY', 'LRED', 'LGREEN', 'YELLOW', 'LBLUE', 'LMAGENTA', 'LCYAN', 'WHITE' ];
 
-	$: sorted = colors.slice(1).sort((a, b) => {
-		return ordered.indexOf(a.NAME) - ordered.indexOf(b.NAME);
-	});
+	$: sorted = colors.slice(1).sort((a, b) => ordered.indexOf(a.NAME) - ordered.indexOf(b.NAME) );
 
 	const prefix = '[\n  {\n    "type": "colordef",';
 	const suffix = '\n  }\n]';
-	const prefix_file = '[\n  {\n    "type": "colordef",\n';
-	const suffix_file = '\n  }\n]';
+	const prefix_file = prefix+'\n';
+	const suffix_file = suffix;
 
-	$: output = [...sorted]
-		.map((color) => {
-			return `    "${color.NAME}": [ ${color.R}, ${color.G}, ${color.B} ]`;
-		})
-		.join(',\n');
+	$: output = sorted.map((color) => `    "${color.NAME}": [ ${color.R}, ${color.G}, ${color.B} ]`).join(',\n');
 
 	const writeToFile = () => {
 		const blob = new Blob([prefix_file, output, suffix_file], { type: 'text/plain' });
@@ -66,13 +59,11 @@
 				colors = tmp.colors;
 			} else {
 				success = false;
-				message = `ERROR: unexpected format`;
+				message = `ERROR: unexpected format ${tmp.file_type} ${file.name}`;
 			}
 		}
 		reader.readAsText(file);
 	}
-
-
 </script>
 <div class="col-adjust">
   <h2 class="f-light">Adjust</h2>
@@ -107,9 +98,7 @@
 <div class="cols">
 	<div class="col-output">
 		<h2 class="f-light">Output</h2>
-			<!-- <textarea name="output" id="output" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix} -->
-      <!-- <button class="btn clicktocopy" on:click={copy}>copy output</button> -->
-      <button class="btn btn-large" on:click={writeToFile}>download .json file</button>
+			<button class="btn btn-large" on:click={writeToFile}>download .json file</button>
       <a class="smaller" href="/about#instructions">(instructions)</a>
 			<textarea name="outputEL" id="outputEL" readonly rows="22" cols="40" on:focus={(e) => e.target.select()}>{prefix}
 {output}{suffix}</textarea>
