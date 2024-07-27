@@ -1,7 +1,7 @@
 import hexRgb from "hex-rgb";
 
 const extractFromDFcolors = async (input) => {
-  const lines = input.split('\n').filter(line => line.trim() !== '');
+  let lines = input.split('\n').filter(line => line.trim() !== '').filter(line => line.match(/^\[.*\]$/gm));
   const colorObject = { type: 'colordef', };
   for(let i = 0; i < lines.length; i+=3) {
     let name_string = lines[i].slice(1,-1).split(":")[0];
@@ -15,7 +15,7 @@ const extractFromDFcolors = async (input) => {
     ];
     colorObject[colorName] = colorObject[colorName] || []; // Create array if not exists
     colorObject[colorName].push(...arr); // Add color value to array
-  }    
+  }
   return [colorObject];
 }
 
@@ -52,20 +52,19 @@ const extractFromGoghColors = async (input) => {
 }
 
 const mapColorObject = (obj) => {
-  return Object.keys(obj).map((color) => {
+  const result = [];
+  const { type } = obj;
+  console.log('obj : ', obj);
+  console.log('type : ', type);
+  for (const color in obj) {
     if (color !== 'type') {
-      return {
-        NAME: color,
-        R: obj[color][0],
-        G: obj[color][1],
-        B: obj[color][2]
-      };
+      result.push({ NAME: color, R: obj[color][0], G: obj[color][1], B: obj[color][2] });
     } else {
-      return {
-        type: 'colordef'
-      };
+      console.log("color == 'type' : ", color);
     }
-  });
+  }
+  if (type) result.unshift({ type });
+  return result;
 };
 
 
@@ -74,45 +73,26 @@ export const detectThemeFormat = async (data, file) => {
   let colors = [];
   let file_type = 'unknown';
 
-  
-    // likely a DF colors file
-    let dfdata = data.split('\n').filter(line => line.trim() !== '').map(x => x.trim());
-    let dfidx = dfdata.findIndex(x => x.includes('[BLACK_R:'));
-    dfdata = dfdata.slice(dfidx).join('\n');
-
-    if (file.type == 'text/plain' && dfdata.split('\n').shift().slice(0,9) == '[BLACK_R:') {
-      const obj = await extractFromDFcolors(dfdata);
-      file_type = 'Dwarf Fortress';
-      colors = mapColorObject(obj[0]);
+  if (file.type == 'text/plain') {
+    console.log('this might be a DF file');
+    const obj = await extractFromDFcolors(data);
+    file_type = 'Dwarf Fortress';
+    colors = mapColorObject(obj[0]);
+  } else if (file.type == 'application/json' && Array.isArray(JSON.parse(data))) {
+    const j = JSON.parse(data);
+    if(j[0].type == 'colordef') {
+      file_type = 'Cataclysm';
+      colors = mapColorObject(j[0]);
     }
-
-
-    // likely a CCDA file
-    if (file.type == 'application/json' && JSON.parse(data).constructor.name == 'Array') {
-      const j = JSON.parse(data);
-      if(Object.prototype.hasOwnProperty.call(j[0], 'BLACK') && j[0].type == 'colordef') {
-        file_type = 'Cataclysm';
-        colors = mapColorObject(j[0]);
-      }
+  } else if (file.type == 'application/json' && typeof JSON.parse(data) == 'object') {
+    const j = JSON.parse(data); 
+    if('color_01' in j) {
+      const obj = await extractFromGoghColors(j);
+      file_type = 'Gogh';
+      colors = mapColorObject(obj);
     }
-
-    
-    // likely a Gogh file
-    if (file.type == 'application/json' && JSON.parse(data).constructor.name == 'Object') {
-      try {
-        const j = JSON.parse(data); 
-        if(Object.prototype.hasOwnProperty.call(j, 'color_01')) {
-          const obj = await extractFromGoghColors(j);
-          file_type = 'Gogh';
-          colors = mapColorObject(obj);
-        }
-      } catch(error) {
-        console.log(error);
-      }
-    }
-    console.log('colors: ', colors);
-    console.log('file_type: ', file_type);
-    return {colors, file_type};
+  }
+  return {colors, file_type};
 }
 
 
