@@ -1,8 +1,7 @@
 <script>
-  import { ColorTranslator, Harmony, Mix } from 'colortranslator';
+  import { ColorTranslator } from 'colortranslator';
   import { accordion } from '$lib/utils';
   export let color;
-  const NAME = color.NAME;
   export let showControls = false;
 
   const initialColor = new ColorTranslator({R: color.R, G: color.G, B: color.B});
@@ -26,19 +25,14 @@
     color.R = RGB.R;
     color.G = RGB.G;
     color.B = RGB.B;
-    color.NAME = NAME;
-    // console.log('color: ', color);
     color = color;
 	}
-  
-
 </script>
 
 
 <div class="block">
   <label class="color-name" for="color_{color.NAME}" title="click to edit color">{color.NAME}</label>
     <input type="color" id="color_{color.NAME}" value={HEX} on:change={updateColor} />
-  <!-- {#if showControls} -->
     <div class="accordion" use:accordion={showControls}>
       <div class="controls-hsl">
         <label for="{color.NAME}_h">h:
@@ -72,7 +66,6 @@
         <label for="{color.NAME}_hex">hex: <input class="hexinput" type="text" name="{color.NAME}_hex" value={HEX} on:change={updateColor}/></label>
       </div>
     </div>
-    <!-- {/if} -->
 </div>
 
 <style>
