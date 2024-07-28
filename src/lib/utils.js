@@ -1,21 +1,36 @@
 import hexRgb from "hex-rgb";
 
-const extractFromDFcolors = async (input) => {
-  let lines = input.split('\n').filter(line => line.trim() !== '').filter(line => line.match(/^\[.*\]$/gm));
+// const extractFromDFcolors = async (input) => {
+//   let lines = input.split('\n').filter(line => line.trim() !== '').filter(line => line.match(/^\[.*\]$/gm));
+//   const colorObject = { type: 'colordef', };
+//   for(let i = 0; i < lines.length; i+=3) {
+//     let name_string = lines[i].slice(1,-1).split(":")[0];
+//     let idx = name_string.indexOf('_');
+//     let colorName = name_string.slice(0, idx);
+//     if(colorName == 'LGRAY') colorName = 'GRAY';
+//     let arr = [
+//       parseInt(lines[i].slice(1,-1).split(":")[1]),
+//       parseInt(lines[i+1].slice(1,-1).split(":")[1]),
+//       parseInt(lines[i+2].slice(1,-1).split(":")[1])
+//     ];
+//     colorObject[colorName] = colorObject[colorName] || []; // Create array if not exists
+//     colorObject[colorName].push(...arr); // Add color value to array
+//   }
+//   return [colorObject];
+// }
+
+const extractFromDFcolors2 = async (inputString) => {
+  let lines = inputString.split('\n').filter(line => line.trim() !== '').filter(line => line.match(/^\[.*\]$/gm))
+  .map(line => line.replace(/^\[|\]$/g, ''));
   const colorObject = { type: 'colordef', };
   for(let i = 0; i < lines.length; i+=3) {
-    let name_string = lines[i].slice(1,-1).split(":")[0];
-    let idx = name_string.indexOf('_');
-    let colorName = name_string.slice(0, idx);
-    if(colorName == 'LGRAY') colorName = 'GRAY';
-    let arr = [
-      parseInt(lines[i].slice(1,-1).split(":")[1]),
-      parseInt(lines[i+1].slice(1,-1).split(":")[1]),
-      parseInt(lines[i+2].slice(1,-1).split(":")[1])
-    ];
-    colorObject[colorName] = colorObject[colorName] || []; // Create array if not exists
-    colorObject[colorName].push(...arr); // Add color value to array
-  }
+    let name_string = lines[i].split("_")[0];
+    if(name_string == 'LGRAY') name_string = 'GRAY'; // explicit color name for LGRAY
+    for(let j = 0; j < 3; j++) {
+      colorObject[name_string] = colorObject[name_string] || []; // Create array if not exists
+      colorObject[name_string].push(parseInt(lines[i+j].split(":")[1])); // Add color value to array
+    }
+  };
   return [colorObject];
 }
 
@@ -70,7 +85,7 @@ export const detectThemeFormat = async (data, file) => {
   let file_type = 'unknown';
 
   if (file.type == 'text/plain') {
-    const obj = await extractFromDFcolors(data);
+    const obj = await extractFromDFcolors2(data);
     file_type = 'Dwarf Fortress';
     colors = mapColorObject(obj[0]);
   } else if (file.type == 'application/json' && Array.isArray(JSON.parse(data))) {
