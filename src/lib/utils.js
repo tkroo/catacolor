@@ -54,13 +54,9 @@ const extractFromGoghColors = async (input) => {
 const mapColorObject = (obj) => {
   const result = [];
   const { type } = obj;
-  console.log('obj : ', obj);
-  console.log('type : ', type);
   for (const color in obj) {
     if (color !== 'type') {
       result.push({ NAME: color, R: obj[color][0], G: obj[color][1], B: obj[color][2] });
-    } else {
-      console.log("color == 'type' : ", color);
     }
   }
   if (type) result.unshift({ type });
@@ -74,7 +70,6 @@ export const detectThemeFormat = async (data, file) => {
   let file_type = 'unknown';
 
   if (file.type == 'text/plain') {
-    console.log('this might be a DF file');
     const obj = await extractFromDFcolors(data);
     file_type = 'Dwarf Fortress';
     colors = mapColorObject(obj[0]);
