@@ -32,40 +32,40 @@
 
 <div class="block">
   <label class="color-name" for="color_{color.NAME}" title="click to edit color">{color.NAME}</label>
-    <input type="color" id="color_{color.NAME}" value={HEX} on:change={updateColor} />
-    <div class="accordion" use:accordion={showControls}>
-      <div class="controls-hsl">
-        <label for="{color.NAME}_h">h:
-          <input type="range" name="{color.NAME}_h" min="0" max="359" bind:value={HSL.H} />
-          <input type="number" name="{color.NAME}_hn" min="0" max="359" bind:value={HSL.H} />
-        </label>
-        <label for="s">s:
-          <input type="range" name="s" min="0" max="100" bind:value={HSL.S} />
-          <input type="number" name="s" min="0" max="100" bind:value={HSL.S} />
-        </label>
-        <label for="l">l:
-          <input type="range" name="l" min="0" max="100" bind:value={HSL.L} />
-          <input type="number" name="l" min="0" max="100" bind:value={HSL.L} />
-        </label>
-      </div>
-      <div class="controls-rgb">
-        <label for="{color.NAME}_r">r:
-          <input type="range" name="{color.NAME}_r" min="0" max="255" bind:value={RGB.R} />
-          <input type="number" name="{color.NAME}_rn" min="0" max="255" bind:value={RGB.R} />
-        </label>
-        <label for="g">g:
-          <input type="range" name="g" min="0" max="255" bind:value={RGB.G} />
-          <input type="number" name="g" min="0" max="255" bind:value={RGB.G} />
-        </label>
-        <label for="b">b:
-          <input type="range" name="b" min="0" max="255" bind:value={RGB.B} />
-          <input type="number" name="b" min="0" max="255" bind:value={RGB.B} />
-        </label>
-      </div>
-      <div class="controls-hex">
-        <label for="{color.NAME}_hex">hex: <input class="hexinput" type="text" name="{color.NAME}_hex" value={HEX} on:change={updateColor}/></label>
-      </div>
+  <input type="color" id="color_{color.NAME}" value={HEX} on:change={updateColor} />
+  <div class="accordion" use:accordion={showControls}>
+    <div class="controls-hsl">
+      <label for="{color.NAME}_h">h:
+        <input type="range" name="{color.NAME}_h" min="0" max="359" bind:value={HSL.H} />
+        <input type="number" name="{color.NAME}_hn" min="0" max="359" bind:value={HSL.H} />
+      </label>
+      <label for="s">s:
+        <input type="range" name="s" min="0" max="100" bind:value={HSL.S} />
+        <input type="number" name="s" min="0" max="100" bind:value={HSL.S} />
+      </label>
+      <label for="l">l:
+        <input type="range" name="l" min="0" max="100" bind:value={HSL.L} />
+        <input type="number" name="l" min="0" max="100" bind:value={HSL.L} />
+      </label>
     </div>
+    <div class="controls-rgb">
+      <label for="{color.NAME}_r">r:
+        <input type="range" name="{color.NAME}_r" min="0" max="255" bind:value={RGB.R} />
+        <input type="number" name="{color.NAME}_rn" min="0" max="255" bind:value={RGB.R} />
+      </label>
+      <label for="g">g:
+        <input type="range" name="g" min="0" max="255" bind:value={RGB.G} />
+        <input type="number" name="g" min="0" max="255" bind:value={RGB.G} />
+      </label>
+      <label for="b">b:
+        <input type="range" name="b" min="0" max="255" bind:value={RGB.B} />
+        <input type="number" name="b" min="0" max="255" bind:value={RGB.B} />
+      </label>
+    </div>
+    <div class="controls-hex">
+      <label for="{color.NAME}_hex">hex: <input class="hexinput" type="text" name="{color.NAME}_hex" value={HEX} on:change={updateColor}/></label>
+    </div>
+  </div>
 </div>
 
 <style>
