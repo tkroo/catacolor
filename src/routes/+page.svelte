@@ -12,7 +12,7 @@
 		{ NAME: 'BLACK', R: 36, G: 31, B: 40 },
 		{ NAME: 'RED', R: 192, G: 28, B: 40 },
 		{ NAME: 'GREEN', R: 24, G: 139, B: 24 },
-		{ NAME: 'BROWN', R: 99, G: 69, B: 44 },
+		{ NAME: 'BROWN', R: 136, G: 99, B: 73 },
 		{ NAME: 'BLUE', R: 26, G: 95, B: 180 },
 		{ NAME: 'MAGENTA', R: 179, G: 45, B: 145 },
 		{ NAME: 'CYAN', R: 0, G: 164, B: 164 },
