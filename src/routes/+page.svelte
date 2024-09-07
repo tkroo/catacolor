@@ -3,9 +3,18 @@
 	import { detectThemeFormat } from '$lib/utils';
 	import { formats } from "$lib/stores";
 	import NewColorBlock from '../lib/NewColorBlock.svelte';
+	import { onMount } from 'svelte';
+
+
+
 	let message = null;
 	let success = false;
 	let showControls = false;
+
+	onMount(() => {
+		showControls = true;
+	})
+
 
 	let colors = [
 		{ type: 'colordef' },
