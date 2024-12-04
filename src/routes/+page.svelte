@@ -74,6 +74,25 @@
 		reader.readAsText(file);
 	}
 </script>
+	<div class="col-adjust load-theme">
+		<div class="controls">
+			<div class="smaller">
+				optional: load a {#each $formats as format, i}
+				<a href="{format.url}">{format.name}</a>{#if i < $formats.length - 1}&nbsp;or&nbsp;{/if}
+				{/each}
+				theme. <a href="/about">(more info)</a>
+			</div>
+			<label for="file-upload" class="btn custom-file-upload">load theme
+			<input
+				id="file-upload"
+				type="file"
+				class="input"
+				name="file-upload"
+				on:change={readFile}/>
+			</label>
+			{#if message}<span class="{success ? 'success' : 'error'}">{message}</span>{/if}
+		</div>
+	</div>
 <div class="col-adjust">
   <h2 class="f-light">Adjust</h2>
 	
@@ -84,23 +103,6 @@
 		{#each sorted as color}
 			<NewColorBlock bind:color bind:showControls />
 		{/each}
-	</div>
-  <div class="controls">
-    <div class="smaller">
-      optional: load a {#each $formats as format, i}
-			<a href="{format.url}">{format.name}</a>{#if i < $formats.length - 1}&nbsp;or&nbsp;{/if}
-			{/each}
-			theme. <a href="/about">(more info)</a>
-    </div>
-		<label for="file-upload" class="btn custom-file-upload">load theme
-		<input
-      id="file-upload"
-      type="file"
-      class="input"
-      name="file-upload"
-      on:change={readFile}/>
-    </label>
-		{#if message}<span class="{success ? 'success' : 'error'}">{message}</span>{/if}
 	</div>
 </div>
 

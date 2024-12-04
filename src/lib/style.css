@@ -162,6 +162,12 @@ textarea {
   margin-bottom: 2rem;
 }
 
+.col-adjust .load-theme {
+  padding-bottom: 0rem;
+  border-bottom: 0px solid #eee;
+  margin-bottom: 0rem;
+}
+
 .col-adjust .controls {
   display: flex;
   flex-wrap: wrap;
